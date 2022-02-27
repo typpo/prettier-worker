@@ -9,7 +9,7 @@ Send a POST request to https://prettier.ty.workers.dev.  The POST request be `ap
 ```js
 {
   "code": "<...your javascript code...>",
-  "prettierOptions: {
+  "prettierOptions": {
     // Optional prettier API params
   }
 }
@@ -51,7 +51,7 @@ Here's an example JSON payload that specifies some options:
 You can test things on your command line as well (see `examples/` directory):
 
 ```sh
-curl -X POST -H 'content-type: application/json' http://localhost:8787 -d '{
+curl -X POST -H 'content-type: application/json' https://prettier.ty.workers.dev -d '{
   "code": "foo(reallyLongArg(), omgSoManyParameters(), IShouldRefactorThis(), isThereSeriouslyAnotherOne());"
 }'
 ```
