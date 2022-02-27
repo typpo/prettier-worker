@@ -13,6 +13,8 @@ const parsers = [
   //require('prettier/parser-yaml'),
 ];
 
+const { handleOptions } = require('./cors');
+
 const DEFAULT_PARSER = 'babel';
 
 const ALLOWED_PAYLOAD_KEYS = new Set(['code', 'options']);
@@ -46,7 +48,11 @@ addEventListener('fetch', (event) => {
 function jsonResponse(obj, statusCode = 200) {
   return new Response(JSON.stringify(obj), {
     status: statusCode,
-    headers: { 'content-type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    },
   });
 }
 
@@ -55,7 +61,9 @@ function fail(message, statusCode = 400) {
 }
 
 async function handleRequest(request) {
-  if (request.method === 'POST') {
+  if (request.method === 'OPTIONS') {
+    return handleOptions(request);
+  } else if (request.method === 'POST') {
     const contentType = request.headers.get('content-type') || '';
     if (!contentType.includes('application/json')) {
       return fail('You must set Content-Type to application/json');

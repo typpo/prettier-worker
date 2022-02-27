@@ -1,8 +1,13 @@
-name = "prettier-worker"
+name = "prettier-worker-dev"
 type = "webpack"
+webpack_config = "webpack.development.js"
 
 account_id = ""
 workers_dev = true
 route = ""
 zone_id = ""
 compatibility_date = "2022-02-27"
+
+[env.production]
+name = "prettier-worker-production"
+webpack_config = "webpack.production.js"
