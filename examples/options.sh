@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 curl -X POST -H 'content-type: application/json' http://localhost:8787 -d '{
-  "options": {
+  "prettierOptions": {
     "singleQuote": true,
     "semi": true,
     "trailingComma": "all"

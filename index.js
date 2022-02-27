@@ -17,9 +17,9 @@ const { handleOptions } = require('./cors');
 
 const DEFAULT_PARSER = 'babel';
 
-const ALLOWED_PAYLOAD_KEYS = new Set(['code', 'options']);
+const ALLOWED_PAYLOAD_KEYS = new Set(['code', 'prettierOptions']);
 
-const ALLOWED_OPTIONS = new Set([
+const PRETTIER_OPTIONS = new Set([
   'arrowParens',
   'bracketSameLine',
   'bracketSpacing',
@@ -92,22 +92,25 @@ async function handleRequest(request) {
       parser: DEFAULT_PARSER,
       plugins: parsers,
     };
-    if (payload.options) {
-      if (payload.options.parser && payload.options.parser !== DEFAULT_PARSER) {
+    if (payload.prettierOptions) {
+      if (
+        payload.prettierOptions.parser &&
+        payload.prettierOptions.parser !== DEFAULT_PARSER
+      ) {
         return fail('Only the babel parser is supported at this time');
       }
 
-      const keys = Object.keys(payload.options);
-      for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        if (!ALLOWED_OPTIONS.has(key)) {
+      const prettierKeys = Object.keys(payload.prettierOptions);
+      for (let i = 0; i < prettierKeys.length; i++) {
+        const key = prettierKeys[i];
+        if (!PRETTIER_OPTIONS.has(key)) {
           return fail(
             `Invalid option ${key}. Option must be one of: {${Array.from(
-              ALLOWED_OPTIONS,
+              PRETTIER_OPTIONS,
             ).join(', ')}}`,
           );
         }
-        const val = payload.options[key];
+        const val = payload.prettierOptions[key];
         const optionType = typeof val;
         if (!['number', 'boolean', 'string'].includes(optionType)) {
           return fail(`Option ${key} must be a number, boolean, or string`);
