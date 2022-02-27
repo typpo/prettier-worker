@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "name": "prettier-worker",
+  "version": "1.0.0",
+  "description": "Serverless code formatting",
+  "main": "index.js",
+  "scripts": {
+    "format": "prettier --write '**/*.{js,css,json,md}'"
+  },
+  "author": "Ian Webster <ianw_github@ianww.com>",
+  "license": "MIT",
+  "dependencies": {
+    "prettier": "^2.5.1"
+  }
+}
