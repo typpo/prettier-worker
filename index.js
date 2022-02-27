@@ -15,6 +15,8 @@ const parsers = [
 
 const DEFAULT_PARSER = 'babel';
 
+const ALLOWED_PAYLOAD_KEYS = new Set(['code', 'options']);
+
 const ALLOWED_OPTIONS = new Set([
   'arrowParens',
   'bracketSameLine',
@@ -48,8 +50,8 @@ function jsonResponse(obj, statusCode = 200) {
   });
 }
 
-function fail(msg, statusCode = 400) {
-  return jsonResponse({ error: msg }, statusCode);
+function fail(message, statusCode = 400) {
+  return jsonResponse({ error: message }, statusCode);
 }
 
 async function handleRequest(request) {
@@ -58,7 +60,21 @@ async function handleRequest(request) {
     if (!contentType.includes('application/json')) {
       return fail('You must set Content-Type to application/json');
     }
-    const payload = await request.json();
+
+    let payload;
+    try {
+      payload = await request.json();
+    } catch (err) {
+      return fail(err.message);
+    }
+
+    const payloadKeys = Object.keys(payload);
+    for (let i = 0; i < payloadKeys.length; i++) {
+      const payloadKey = payloadKeys[i];
+      if (!ALLOWED_PAYLOAD_KEYS.has(payloadKey)) {
+        return fail(`Unknown top-level key: ${payloadKey}`);
+      }
+    }
 
     if (!payload.code) {
       return fail('You must provide a `code` property in your payload');
@@ -84,8 +100,9 @@ async function handleRequest(request) {
           );
         }
         const val = payload.options[key];
-        if (val !== Object(val)) {
-          return fail(`Option ${key} must be a primitive`);
+        const optionType = typeof val;
+        if (!['number', 'boolean', 'string'].includes(optionType)) {
+          return fail(`Option ${key} must be a number, boolean, or string`);
         }
         options[key] = val;
       }
@@ -96,7 +113,7 @@ async function handleRequest(request) {
       return jsonResponse({ code: result });
     } catch (err) {
       console.error(err);
-      return jsonResponse({ error: err.message }, 500);
+      return jsonResponse({ error: err.message }, 400);
     }
   }
 
