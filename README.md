@@ -6,7 +6,7 @@ Prettier, hosted as a Cloudflare Worker.
 
 Send a POST request to https://prettier.ty.workers.dev.  The POST request be `application/json` encoded and the payload must look like this:
 
-```json
+```js
 {
   "code": "<...your javascript code...>",
   "prettierOptions: {
