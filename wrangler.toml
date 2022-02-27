@@ -9,5 +9,5 @@ zone_id = ""
 compatibility_date = "2022-02-27"
 
 [env.production]
-name = "prettier-worker-production"
+name = "prettier"
 webpack_config = "webpack.production.js"
